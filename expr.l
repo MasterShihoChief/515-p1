@@ -9,7 +9,7 @@
   Use the following global variable to send information back to main():
       
     extern YYSTYPE yylval;
-
+[0-9]+(\.[0-9]+)?(e[+-]?[0-9]+(\.[0-9]+)?)?		return emit_double(T_DOUBLE_CONSTANT);
   The union YYSTYPE is defined in y.tab.h (which is included by parser.h).
   You can use a union just like a struct (which is a lot like a class),
   except that only one member variable can be used at a time.
@@ -59,7 +59,7 @@ double emit_double(int token)
   
 }
 
-/*int emit_error(int token)
+int emit_error(int token)
 {
   // have the error handling object report the problem
   // note: it uses line_count as a global variable
@@ -69,7 +69,7 @@ double emit_double(int token)
   // put that string in the yylval union so it can be used by parser (.y file)
   yylval.union_string = new string(yytext);
   return token;
-}*/
+}
 
 // the %} below indicates the end of the C/C++ code section
 
@@ -88,11 +88,13 @@ The right-hand-side (RHS) gives an action (code to execute)
 [ \t\r]         ; // ignore spaces, tabs and the microsoft line feed (\r)
 
 "("             return T_LPAREN;
-")"             return T_RPAREN;
 "+"             return T_PLUS;
+")"             return T_RPAREN;
 "-"             return T_MINUS;
 "*"				return T_PRODUCT;
 "/"				return T_QUOTIENT;
 
+
 [0-9]+          return emit_int(T_INT_CONSTANT);	
-[-+]?([0-9]*\?[0-9]+|[0-9]+\.)			return emit_double(T_DOUBLE_CONSTANT);
+([0-9]*\.?[0-9]+|[0-9]+\.)		return emit_double(T_DOUBLE_CONSTANT);
+.               return emit_error(T_ERROR);

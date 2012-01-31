@@ -71,7 +71,7 @@ using namespace std;
 %token T_QUOTIENT
 
 %token <union_int> T_INT_CONSTANT // this token has a int value associated w/it
-/*%token <union_string> T_ERROR // this token has a string value associated w/it*/
+%token <union_string> T_ERROR // this token has a string value associated w/it
 %token <union_double> T_DOUBLE_CONSTANT //this token has a double value associated w/it
 
 // grammar symbols that have values associated with them need to be
@@ -152,7 +152,27 @@ myDouble:
     $$ = $1 + $3;
   }
   |
+   expression T_PLUS myDouble
+  {
+    $$ = $1 + $3;
+  }
+  |
+   myDouble T_PLUS expression
+  {
+    $$ = $1 + $3;
+  }
+  |
   myDouble T_MINUS myDouble
+  {
+    $$ = $1 - $3;
+  }
+  |
+  expression T_MINUS myDouble
+  {
+    $$ = $1 - $3;
+  }
+  |
+  myDouble T_MINUS expression
   {
     $$ = $1 - $3;
   }
@@ -167,7 +187,27 @@ myDouble:
 	$$ = $1 * $3;
   }
   |
+  expression T_PRODUCT myDouble
+  {
+	$$ = $1 * $3;
+  }
+  |
+  myDouble T_PRODUCT expression
+  {
+	$$ = $1 * $3;
+  }
+  |
   myDouble T_QUOTIENT myDouble
+  {
+	$$ = $1 / $3;
+  }
+  |
+  expression T_QUOTIENT myDouble
+  {
+	$$ = $1 / $3;
+  }
+  |
+  myDouble T_QUOTIENT expression
   {
 	$$ = $1 / $3;
   }
